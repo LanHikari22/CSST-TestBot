@@ -16,11 +16,10 @@ def dbg(str, file=None, active=True):
     except: pass
 
 
-
-
 if __name__ == '__main__':
     dbg("Welcome to __main__.py")
     bot = commands.Bot(command_prefix='?', description="You are the reason why I still -- oops this is a song")
+    commands = [] # list of BotCMD objects that are available to this bot
     msgHistory = []
 
 async def botmsg(string):
@@ -34,7 +33,7 @@ async def execute(message):
     user = message.author
     user = str(user)[:-5]
 
-    # obtain args
+    # obtain argv
     msg = message.content[message.content.index('>')+2:] # remove '<id> '
     argv = msg.split(' ')
 
