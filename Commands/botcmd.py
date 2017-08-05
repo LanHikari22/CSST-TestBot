@@ -8,30 +8,24 @@ class BotCMD:
 
     # execution activation command for when listening for mention commands
     command = None
-    # set the argument vector for this command to execute based on runtime
-    argv = None
 
     # defined error_code constants
-    SUCCESS = 0             # success! you can execute this successfully.
+    SUCCESS = 0          # success! you can execute this successfully.
     COMMAND_MISMATCH = -1   # not even the command matches.
     COMMAND_MATCH = 1       # in case the command matches, the error code is always positive! This isn't a success.
     INVALID_ARGV_FORMAT = -2# in case the argv is not a list of strings...
 
 
 
-    def __init__(self, command:str, argv:list=None):
+    def __init__(self, command:str):
         self.command = command
-        self.argv = argv
 
-    def execute(self):
-        """action of command"""
-        pass
+    def execute(self, argv):
+        """action of command, if argv is None, you shall deal with the consequences"""
+        print("*executes abstract magic!*")
 
-    def set_argv(self, argv:list):
-        """set the argument vector of this command runtime"""
-        self.argv = argv
 
-    def isValid(self, command, argv=None):
+    def get_error_code(self, command, argv=None):
         """
         determines whether the command can activate.
         This can be based on whether the given command matches the activation command,
@@ -66,10 +60,10 @@ class BotCMD:
     @staticmethod
     def get_help_format():
         """
-         defines the help_format of this command. ex. "add <number> <number>". always contains command.
+         defines the help_format of this command. ex. "<number> <number>". does not contains command.
         :return: the format the command should be in
         """
-        return "apply magic --on Target"
+        return "applyMagic --on Target"
 
     @staticmethod
     def get_help_doc():

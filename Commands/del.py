@@ -3,32 +3,30 @@ import discord
 from discord.ext.commands import Bot
 
 
-class AddCMD(BotCMD):
+# TODO in progress
+class DelCMD(BotCMD):
 
     # access to bot -- to send message.
     bot = None
     channel = None
+    # needs history of sent messages
+    msgHistory = None
 
-    # defined error constants
-    ARG1_FAILURE = 0b0010
-    ARG2_FAILURE = 0b0100
-    BOTH_FAILURE = 0b0110
-    MISSING_ARGS = 7
-
-    def __init__(self, command: str, bot:Bot, channel:discord.Channel):
+    def __init__(self, command: str, bot:Bot, channel:discord.Channel, msgHistory:list):
         super().__init__(command)
         self.bot = bot
         self.channel = channel
+        self.msgHistory = msgHistory
 
 
 
     @staticmethod
     def get_help_format():
-        return "<number> <number>"
+        return ""
 
     @staticmethod
     def get_help_doc():
-        return "adds two numbers together"
+        return "deletes one of the previous messages sent by this bots"
 
     def get_error_code(self, command, argv=None):
         if self.command != command:

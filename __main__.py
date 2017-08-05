@@ -1,7 +1,13 @@
 import sys
 import discord
 from discord.ext import commands
+import asyncio
+import time
 
+# commands used (also initialize in on_ready())
+from Commands.botcmd import BotCMD
+from Commands.add import AddCMD
+from Commands.gg import GGCMD
 
 DEBUG = True
 def dbg(str, file=None, active=True):
@@ -17,9 +23,8 @@ def dbg(str, file=None, active=True):
 
 
 if __name__ == '__main__':
-    dbg("Welcome to __main__.py")
     bot = commands.Bot(command_prefix='?', description="You are the reason why I still -- oops this is a song")
-    commands = [] # list of BotCMD objects that are available to this bot
+    bot_commands = [] # list of BotCMD objects that are available to this bot
     msgHistory = []
 
 async def botmsg(string):
@@ -29,28 +34,47 @@ async def botmsg(string):
 async def execute(message):
     """executes command passed in argv"""
 
-    # obtain user
-    user = message.author
-    user = str(user)[:-5]
-
     # obtain argv
     msg = message.content[message.content.index('>')+2:] # remove '<id> '
     argv = msg.split(' ')
 
+    # execute appropriate command
+    # First, control commands
     if argv[0] == 'help':
-        await botmsg("Hi %s! I'm QBot.cplx! Here's how to use me:\n* help\n* add <number> <number>\n* gg\n* del" % user)
-    elif argv[0] == 'add':
-        if len(argv) < 2: return await botmsg("I don't know what I'm supposed to add...")
-        if not (argv[1].isnumeric() and argv[2].isnumeric()):
-            await botmsg("Are you... Are you really adding numbers?")
-        await botmsg("Um. I think I can do this... Let's see...\n%s plus %s equals %s, I think??" %
-                     (int(argv[1]), int(argv[2]), int(argv[1]) + int(argv[2])))
-    elif argv[0] == 'del':
-        await botmsg("Error: This is currently unsupported. Give me more premissions if you really want it done.")
-        if msgHistory:
-            bot.delete_message(msgHistory.pop())
-    elif msg == "gg":
-        await botmsg("gg %s!" % user)
+        await handle_help(user)
+    else:
+        for botcmd in bot_commands:
+            error_code = botcmd.get_error_code(command=argv[0], argv=argv)
+            if error_code == BotCMD.SUCCESS:
+                await botcmd.execute(argv)
+            elif error_code >= BotCMD.COMMAND_MATCH: # if command matches, argv error_codes are all > COMMAND_MATCH
+                await botmsg(botcmd.get_error_msg(error_code))
+
+async def handle_help(user):
+    msg = "Hi %s! I'm QBot! Here's how to use me:\n" % user
+    for botcmd in bot_commands:
+        msg += "**%s**\t\t%s\n" % (botcmd.command, botcmd.get_help_format())
+    msg += "**help**\n"
+    await botmsg(msg)
+
+def get_bot_command(bot_commands, command):
+    """
+    simpler helper that identifies a commandbot by its unique command id and returns it
+    :returns: bot_command with specified command as id, or None
+    """
+    bot_command = None
+    for botcmd in bot_commands:
+        if botcmd.command == command:
+            bot_command = botcmd
+            break
+    return bot_command
+
+
+    # elif argv[0] == 'del':
+    #     await botmsg("Error: This is currently unsupported. Give me more premissions if you really want it done.")
+    #     if msgHistory:
+    #         bot.delete_message(msgHistory.pop())
+
 
 @bot.event
 async def on_ready():
@@ -72,22 +96,46 @@ async def on_ready():
     # await bot.change_nickname(member,nickname='QuarkBot') # i'm sorry, you can't
     await bot.change_presence(game=discord.Game(name="QBot.cplx"))
 
+    # initiate commands -- insert commands used by the bot here
+    bot_commands.append(AddCMD(command='add',bot=bot,channel=channel))
+    bot_commands.append(GGCMD(command='gg', bot=bot, channel=channel))
+
 
 @bot.event
 async def on_message(message):
     dbg("<on_message>")
+
+    # obtain user
+    global user # oops
+    user = message.author
+    user = str(user)[:-5]
 
     if not (message.mentions is not None and member in message.mentions):
         return
 
     # This is only executed at @<this_bot> so!
 
+    # setup for bot commands that need message dependent data
+    get_bot_command(bot_commands, 'gg').setUser(user)
 
-    await execute(message) # executes commands in msg
-
+    await execute(message) # executes commands in msg if any
 
     dbg("</on_message>\n")
 
 
+async def my_background_task():
+    global bot, server
+    await bot.wait_until_ready()
+    logfile = open("stats.log", "a")
+    dbg(logfile)
+    time_ref = time.time()
+    while not bot.is_closed:
+        try:
+            logfile.write("[t=%is] numMembers: %i\n" % ((int(time.time()-time_ref), server.member_count)))
+            dbg("[t=%is] numMembers: %i\n" % ((int(time.time()-time_ref), server.member_count)))
+        except: pass
+        await asyncio.sleep(1)  # task runs every second
+
+bot.loop.create_task(coro=my_background_task())
 bot.run('MzQwODkxMjIwMzc5MTcyODk2.DGS_mw.dpKg0Z8V0NF0jESEOBltvxasxxE')
 bot.logout()
