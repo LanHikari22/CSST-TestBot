@@ -39,8 +39,8 @@ def file_replace(old, new, in_filename='input.html', out_filename='output.html')
 
 # verify functionaity
 if __name__ == '__main__':
-    generate_html(Name='Lan', ID='1939', Currency='5000 CT',
-                  Info='I am but a devoted bot developer. I can talk and talk about myself,but I aim to improve and ' +
-                  'show everyone how good my bots are!!!!',
-                  button_bg_filename='https://cdn.discordapp.com/avatars/153783929474646016/971b4b8ded67f3c3e08cbe9e7bdedce1.webp?size=1024')
-    webkit_render(html_filename='output.html', png_filename='output.png')
+    # generate_html(Name='Lan', ID='1939', Currency='5000 CT',
+    #               Info='I am but a devoted bot developer. I can talk and talk about myself,but I aim to improve and ' +
+    #               'show everyone how good my bots are!!!!',
+    #               button_bg_filename='https://cdn.discordapp.com/avatars/153783929474646016/971b4b8ded67f3c3e08cbe9e7bdedce1.webp?size=1024')
+    webkit_render(html_filename='https://cdn.discordapp.com/attachments/204416029227614208/343617471934103564/output.html', png_filename='output.png')
