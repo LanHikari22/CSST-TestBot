@@ -101,6 +101,7 @@ async def on_ready():
     bot_commands.append(GGCMD(command='gg', bot=bot, channel=channel))
 
 
+
 @bot.event
 async def on_message(message):
     dbg("<on_message>")
@@ -109,6 +110,7 @@ async def on_message(message):
     global user # oops
     user = message.author
     user = str(user)[:-5]
+
 
     if not (message.mentions is not None and member in message.mentions):
         return
@@ -132,7 +134,7 @@ async def my_background_task():
     while not bot.is_closed:
         try:
             logfile.write("[t=%is] numMembers: %i\n" % ((int(time.time()-time_ref), server.member_count)))
-            dbg("[t=%is] numMembers: %i\n" % ((int(time.time()-time_ref), server.member_count)))
+            # dbg("[t=%is] numMembers: %i\n" % ((int(time.time()-time_ref), server.member_count)))
         except: pass
         await asyncio.sleep(1)  # task runs every second
 

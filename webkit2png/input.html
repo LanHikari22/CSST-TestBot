@@ -5,8 +5,12 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head><title>
-
 </title>
+
+    <!-- Variables
+    Name, ID, Currency, Info, button_bg_filename
+    -->
+
     <style type="text/css">
     </style>
 </head>
@@ -73,29 +77,29 @@
         }
         .RunButton{
             position: absolute;
-            background: url('https://cdn.discordapp.com/attachments/297969825240842242/332126103424729088/Nicaea_settings_icon-50.png') no-repeat center center;
+            background: url('{{button_bg_filename}}') no-repeat center center;
             background-size: 100% 100%;
             object-fit: cover;
-            height: 49px;
-            width: 46px;
+            height: 128px;
+            width: 128px;
             top: 23px;
-            left: 419px;
+            left: 350px;
             margin-right: 3px;
         }
     </style>
 
     <div class="Topleft">
         <input id="Text1" class="TopleftLabel" type="text"; value="Name"   readonly="readonly"/>
-        <input id="Text2" class="TopleftLabel" type="text"; value="Arcana" readonly="readonly"/>
-        <input id="Text3" class="TopleftLabel" type="text"; value="Nicaea" readonly="readonly"/>
+        <input id="Text2" class="TopleftLabel" type="text"; value="ID" readonly="readonly"/>
+        <input id="Text3" class="TopleftLabel" type="text"; value="Currency" readonly="readonly"/>
     </div>
     <div class="Topcenter">
         <input id="name" class="TopcenterLabel" type="text"; value="{{Name}}"  />
-        <input id="handle" class="TopcenterLabel" type="text"; value="{{Handle}}"/>
-        <input id="nicaea" class="TopcenterLabel" type="text"; value="{{Nicaea}}"/>
+        <input id="handle" class="TopcenterLabel" type="text"; value="{{ID}}"/>
+        <input id="nicaea" class="TopcenterLabel" type="text"; value="{{Currency}}"/>
     </div>
     <div class="InfoDiv">
-            <textarea id="info" class="InfoLabel" cols="20" name="S1" rows="2"">Your Info.</textarea>
+            <textarea id="info" class="InfoLabel" cols="20" name="S1" rows="2"">{{Info}}</textarea>
     </div>
     <p><button id="Button1" class="RunButton" onclick="runButton()"></button></p>
 
